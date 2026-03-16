@@ -1617,7 +1617,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="shop-card"><span class="sc-icon">🪙</span><h3>Starter Pack</h3><p>100 coins — great for hints and one-off unlocks.</p><div class="shop-price">🪙 100 coins</div><button class="btn btn-lime btn-xs" onclick="buyCoins(100,'£0.99')">£0.99</button></div>
       <div class="shop-card" style="border-color:rgba(255,224,59,0.18)"><span class="sc-icon">🪙🪙</span><h3>Popular Pack</h3><p>350 coins — best for regular challenge players.</p><div class="shop-price">🪙 350 coins</div><button class="btn btn-lime btn-xs" onclick="buyCoins(350,'£2.99')">£2.99</button></div>
       <div class="shop-card" style="border-color:rgba(255,224,59,0.28)"><span class="sc-icon">🪙🪙🪙</span><h3>Mega Pack</h3><p>1,000 coins — serious learners, best value per coin.</p><div class="shop-price">🪙 1,000 coins</div><button class="btn btn-lime btn-xs" onclick="buyCoins(1000,'£7.99')">£7.99</button></div>
-      <div class="shop-card" style="border-color:rgba(123,47,255,0.18)"><span class="sc-icon">👨‍👩‍👧</span><h3>Family Bundle</h3><p>3 student profiles, parent dashboard, weekly reports.</p><div class="shop-price" style="color:var(--purple)">£9.99/month</div><button class="btn btn-ghost btn-xs" onclick="alert('Coming soon in the live app!')">Coming Soon</button></div>
+      <div class="shop-card" style="border-color:rgba(123,47,255,0.18)"><span class="sc-icon">👨‍👩‍👧</span><h3>Family Bundle</h3><p>3 student profiles, parent dashboard, weekly reports.</p><div class="shop-price" style="color:var(--purple)">£9.99/month</div><button class="btn btn-lime btn-xs" onclick="buyFamilyBundle()">£9.99/month →</button></div>
     </div>
     <div class="shop-section-title">Spend Coins</div>
     <div class="spend-grid">
@@ -1750,7 +1750,18 @@ function doSignup(){
   try{if(document.getElementById('su-push').checked&&'Notification' in window)Notification.requestPermission();}catch(e){}
 }
 
-// ══ STRIPE MOCK ══
+// ══ STRIPE PAYMENT LINKS CONFIGURATION ══
+const STRIPE_LINKS = {
+  coins_100: 'https://buy.stripe.com/cNi9AL7kh5wY3ka6cV9sk05',
+  coins_350: 'https://buy.stripe.com/14AdR1dIFe3u8EugRz9sk06',
+  coins_1000: 'https://buy.stripe.com/fZu6ozgURe3u7AqcBj9sk07',
+  premium_monthly: 'https://buy.stripe.com/7sYfZ90VT4sU6wm7gZ9sk08',
+  premium_yearly: 'https://buy.stripe.com/8x29ALawt6B29Iy7gZ9sk09',
+  family_bundle: 'https://buy.stripe.com/3cI8wHgUR5wY2g658R9sk0a',
+  tutoring: 'https://buy.stripe.com/fZufZ91ZXf7y07Y7gZ9sk04',
+  vouchers: 'https://buy.stripe.com/28EfZ9awt5wY8Eu1WF9sk03'
+};
+
 // ══ DISCOUNT CODES ══
 // Each code: { off: percent, fixed: amount, applies: ['product keywords'], label: 'display text' }
 const CODES = {
@@ -2146,12 +2157,36 @@ function buildActivityGraph(){
 }
 
 // ══ SHOP ══
-function buyCoins(amt,price){openStripe(amt+' Maths Coins',price);}
+function buyCoins(amt,price){
+  const linkKey = `coins_${amt}`;
+  const link = STRIPE_LINKS[linkKey];
+  if (link === 'PENDING') {
+    showToast('This payment link is not yet set up. Please contact support.', 'err');
+    return;
+  }
+  window.open(link, '_blank');
+}
 function spendCoins(amt,item){
   if(coins<amt){showToast('You need '+amt+' coins but have '+coins,'err');return;}
   if(confirm('Spend '+amt+' coins on: '+item+'?')){coins-=amt;saveState();syncUI();showToast('✅ '+item+' unlocked!','ok');}
 }
-function upgradePremium(){openStripe('Premium Monthly','£4.99/month');}
+function upgradePremium(type='monthly'){
+  const linkKey = type === 'yearly' ? 'premium_yearly' : 'premium_monthly';
+  const link = STRIPE_LINKS[linkKey];
+  if (link === 'PENDING') {
+    showToast('Premium subscription is not yet set up. Please contact support.', 'err');
+    return;
+  }
+  window.open(link, '_blank');
+}
+function buyFamilyBundle(){
+  const link = STRIPE_LINKS.family_bundle;
+  if (link === 'PENDING') {
+    showToast('Family Bundle is not yet set up. Please contact support.', 'err');
+    return;
+  }
+  window.open(link, '_blank');
+}
 
 // ══ MARKETING ══
 function toggleFaq(el){
