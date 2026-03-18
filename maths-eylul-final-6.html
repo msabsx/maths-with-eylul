@@ -629,6 +629,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .footer-links a{font-size:0.74rem;color:rgba(255,255,255,0.25);text-decoration:none;font-weight:700;cursor:pointer;transition:color 0.2s;}
 .footer-links a:hover{color:var(--white);}
 
+/* ══ LANGUAGE TOGGLE ══ */
+.lang-toggle{display:flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:2rem;padding:0.3rem 0.7rem;cursor:pointer;font-size:0.72rem;font-weight:800;letter-spacing:0.05em;color:var(--white);transition:all 0.2s;flex-shrink:0;}
+.lang-toggle:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);}
+.lang-flag{font-size:1rem;line-height:1;}
+.lang-label{font-size:0.7rem;font-weight:800;letter-spacing:0.06em;}
+
 /* ══ CERT BANNER (app) ══ */
 .cert-banner{background:linear-gradient(135deg,rgba(255,224,59,0.07),rgba(200,241,53,0.04));border:1px solid rgba(255,224,59,0.18);border-radius:0.8rem;padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
 .cert-banner-t{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em;color:var(--yellow);}
@@ -924,8 +930,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <li><a style="cursor:pointer;color:var(--lime)" onclick="smoothTo('enquiry')">Free Consult</a></li>
     </ul>
     <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
-      <button class="btn btn-ghost btn-sm" onclick="openModal('login-modal')" id="nav-signin">Sign In</button>
-      <button class="btn btn-lime btn-sm" onclick="launchApp()">Open App →</button>
+      <button class="lang-toggle" onclick="toggleLang()" id="lang-btn" title="Switch language / Dili değiştir"><span class="lang-flag" id="lang-flag">🇹🇷</span><span class="lang-label" id="lang-label">Türkçe</span></button>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('login-modal')" id="nav-signin" data-en="Sign In" data-tr="Giriş Yap">Sign In</button>
+      <button class="btn btn-lime btn-sm" onclick="launchApp()" data-en="Open App →" data-tr="Uygulamayı Aç →">Open App →</button>
     </div>
   </nav>
 
@@ -2212,6 +2219,957 @@ const revObs=new IntersectionObserver(entries=>{
 },{threshold:0.08});
 document.querySelectorAll('.tc,.pricing-box,.faq-item,.note-card,.blog-card').forEach(el=>{
   el.style.opacity='0';el.style.transform='translateY(18px)';el.style.transition='opacity 0.5s ease,transform 0.5s ease';revObs.observe(el);
+});
+
+// ══ BILINGUAL TRANSLATION SYSTEM ══
+const translations = {
+  en: {
+    // META
+    pageTitle: "Maths with Eylul — 1-to-1 Maths Tutoring | Liverpool, Manchester, North West, Cheshire & Online UK",
+    // NAV
+    navAbout:"About", navLessons:"Lessons", navVouchers:"Vouchers", navApp:"The App",
+    navBlog:"Blog", navFaq:"FAQ", navConsult:"Free Consult", navSignin:"Sign In", navOpenApp:"Open App →",
+    // BANNER
+    bannerText:"🎉 <span>FREE 15-minute consultation</span> — no pressure, no commitment.",
+    bannerBtn:"Claim Free →",
+    // TICKER
+    ticker:"📲 ONLINE UK-WIDE · 🏆 ALL AGES · ✅ 1-TO-1 · 🎯 GCSE PREP · ⭐ 5-STAR · 🤖 AI BOT · 🎮 DAILY CHALLENGES · 📊 PROGRESS TRACKING · 🇹🇷 TURKISH AVAILABLE",
+    // HERO
+    heroEyebrow:"Tutoring + Learning App · Ages 7–Adult · UK",
+    heroDesc:"1-to-1 tutoring plus a full AI-powered learning app. Daily challenges, mock exams, a maths bot, and progress tracking — all in one place.",
+    heroBtn1:"Open App Free →", heroBtn2:"Free Consultation",
+    trust1:"⭐⭐⭐⭐⭐ 5-Star Rated", trust2:"✓ Ages 7 to Adult", trust3:"✓ First Lesson 20% Off", trust4:"🤖 AI Powered",
+    // STATS BAR
+    stat1label:"Personalised", stat2label:"First Lesson Off", stat3label:"Bot 24/7", stat4label:"Daily Challenges",
+    // ABOUT
+    aboutTag:"About Eylul",
+    aboutH2:"FRIENDLY MATHS<br>SUPPORT FOR<br><span style=\"color:var(--lime)\">ALL AGES</span>",
+    aboutP1:"Hi, I'm Eylul. I offer supportive, confidence-building maths lessons for all ages and abilities. My focus is on helping students <strong style=\"color:var(--white)\">understand</strong> maths — not just memorise it. Every lesson is calm, clear, and tailored to you.",
+    aboutP2:"I work with children, teens, and adults — whether you need ongoing support, exam preparation, or just a confidence boost. Available online UK-wide and in person across Liverpool, Manchester, North West &amp; Cheshire.",
+    aboutPill1:"Ages 7–Adult", aboutPill2:"Online UK-Wide", aboutPill3:"North West &amp; Cheshire",
+    aboutBtn1:"Free Consultation →", aboutBtn2:"Book a Lesson",
+    aboutBoxH3:"What I Offer",
+    offer1:"Primary", offer1p:"Number, arithmetic &amp; problem-solving.", offer1tag:"Ages 7–11",
+    offer2:"KS3", offer2p:"Algebra, geometry &amp; statistics.", offer2tag:"Ages 11–14",
+    offer3:"GCSE", offer3p:"Exam prep &amp; past papers.", offer3tag:"Ages 14–16+",
+    offer4:"Adult", offer4p:"Return to maths, no judgement.", offer4tag:"18+",
+    offer5:"Online", offer5p:"Google Meet or Zoom, UK-wide.", offer5tag:"Anywhere",
+    offer6:"In-Person", offer6p:"Liverpool, Manchester, North West &amp; Cheshire.", offer6tag:"NW England",
+    // TUTORING PRICING
+    tutoringTag:"1-to-1 Tutoring",
+    tutoringH2:"LESSON PRICES &amp;<br><span style=\"color:var(--lime)\">BUNDLES</span>",
+    tutoringSubP:"All lessons are personalised and flexible. Online UK-wide or in-person across Liverpool, Manchester, North West &amp; Cheshire.",
+    tp1h:"Single Lesson", tp1price:"£50", tp1unit:"/ hour",
+    tp1desc:"Perfect to try before committing. Great for one-off support or a taster session.",
+    tp1discount:"First lesson 20% off", tp1btn1:"Book Now →", tp1btn2:"Free Consult First",
+    tp2h:"5-Lesson Block", tp2price:"£250", tp2unit:"/ block",
+    tp2desc:"Great momentum with a shorter commitment. Ideal for exam prep or catching up on a topic.",
+    tp2discount:"10% off", tp2btn:"Book Block →",
+    tp3badge:"🔥 Best Value", tp3h:"10-Lesson Block", tp3price:"£500", tp3unit:"/ block",
+    tp3desc:"Best value for consistent weekly support. Real progress over 10 personalised sessions.",
+    tp3discount:"25% off", tp3btn:"Book Block →",
+    subsLabel:"Long-Term Subscriptions",
+    sub1h:"6-Month Subscription", sub1price:"£1,300", sub1unit:"/ 26 lessons",
+    sub1desc:"Half a year of consistent support. 10% off with code <strong style=\"color:var(--electric)\">YEAR26</strong>.",
+    sub1btn:"Subscribe →",
+    sub2h:"Yearly Subscription", sub2price:"£2,600", sub2unit:"/ 52 lessons",
+    sub2desc:"A full year of weekly lessons. 10% off with code <strong style=\"color:var(--electric)\">YEAR52</strong>.",
+    sub2btn:"Subscribe →",
+    step1t:"Free Consult", step1d:"15-min chat, no pressure",
+    step2t:"Book &amp; Pay", step2d:"Secure via Stripe",
+    step3t:"We Connect", step3d:"Meet, Zoom or in-person",
+    step4t:"You Level Up", step4d:"Real progress, real confidence",
+    // VOUCHERS
+    vouchTag:"Gift Vouchers",
+    vouchH2:"GIVE THE GIFT<br>OF CONFIDENCE",
+    vouchP:"Perfect for birthdays, exam prep, or any time someone deserves a confidence boost. Digital delivery, no expiry date.",
+    vperk1:"Redeemable against online lessons", vperk2:"Suitable for all ages &amp; abilities",
+    vperk3:"Digital delivery — no expiry date", vperk4:"Flexible scheduling",
+    vouchBtn:"Buy a Gift Voucher →", vouchCardLabel:"Gift Voucher · Online Lessons",
+    // APP SECTION
+    appTag:"The Platform",
+    appH2:"TUTORING + A FULL<br><span style=\"color:var(--electric)\">LEARNING APP</span>",
+    feat1t:"AI Maths Bot", feat1d:"Ask anything, get step-by-step working, hints before answers — available 24/7.",
+    feat2t:"Daily Challenges", feat2d:"New questions daily across 6 topics. Earn coins, build streaks, unlock levels.",
+    feat3t:"GCSE Mock Exams", feat3d:"Timed exams with instant marking, grade estimates, and score history.",
+    feat4t:"Progress Tracking", feat4d:"Visual dashboards showing level, XP, topic mastery, and streaks.",
+    feat5t:"Leaderboard", feat5d:"Weekly and all-time rankings. Earn your spot at the top.",
+    feat6t:"Coins &amp; Rewards", feat6d:"Earn coins for completing challenges. Spend them to unlock hints and harder levels.",
+    appFreeH:"FREE TO START",
+    appFreeP:"3 daily challenges free. Upgrade for unlimited access, full AI bot, and all mock exams.",
+    appTryBtn:"Try Free — No Sign Up Needed →",
+    // TESTIMONIALS
+    testiTag:"Real Results",
+    testiH2:"WHAT STUDENTS<br><span style=\"color:var(--coral)\">ARE SAYING</span>",
+    t1q:'"Eylul completely transformed my daughter\'s attitude to maths. Her GCSE grade jumped from a 3 to a 6 — we couldn\'t be happier."',
+    t1name:"Sarah M.", t1role:"Parent of GCSE Student",
+    t2q:'"I hadn\'t done maths since school. Eylul made it non-intimidating and I passed my functional skills exam first time. Incredible."',
+    t2name:"James T.", t2role:"Adult Learner",
+    t3q:'"My son was struggling with Year 8 algebra. After 5 sessions he was ahead of his class. The patience and explanations are brilliant."',
+    t3name:"Rachel K.", t3role:"Parent of KS3 Student",
+    rLabel:"47 Reviews",
+    rm1:'"Brilliant tutor, so patient and clear."', rm2:'"My son\'s confidence has grown massively."', rm3:'"Best maths tutor we\'ve found. Highly recommend."',
+    // PRICING
+    pricingTag:"Pricing",
+    pricingH2:"CLEAR PRICES.<br>NO SURPRISES.",
+    pricingAppLabel:"📱 App Subscriptions",
+    pricingTutorLabel:"📚 1-to-1 Tutoring",
+    pricingCoinsLabel:"🪙 Coins Shop (In-App)",
+    pcFreeH:"Free", pcFree1:"3 daily challenges", pcFree2:"5 bot questions/day", pcFree3:"1 exam/month", pcFree4:"View leaderboard",
+    pcFreeBtn:"Start Free",
+    pcPremH:"Premium", pcPrem1:"Unlimited challenges", pcPrem2:"Full AI bot", pcPrem3:"Unlimited exams", pcPrem4:"Progress dashboard", pcPrem5:"Certificates", pcPrem6:"Leaderboard",
+    pcPremBtn:"Upgrade",
+    pcYearH:"Yearly", pcYear1:"Everything in Premium", pcYear2:"2 months free", pcYear3:"Priority support", pcYear4:"Phase 2 early access",
+    pcYearBtn:"Get Yearly",
+    pcSingleH:"Single Lesson", pcSingleDesc:"Code FIRST20 for 20% off your first session.", pcSingleBtn:"Book Now",
+    pcBlockH:"10-Lesson Block", pcBlockDesc:"Best value. Code: LESSON10", pcBlockBtn:"Book Block",
+    pcBlockBadge:"💰 Save 25%",
+    coin1name:"100 Coins", coin1sub:"Starter pack",
+    coin2name:"350 Coins", coin2sub:"Most popular",
+    coin3name:"1,000 Coins", coin3sub:"Best value",
+    coin4name:"Family Bundle", coin4sub:"3 students",
+    // REVISION
+    revTag:"Free Revision Notes",
+    revH2:"STUDY BETWEEN<br><span style=\"color:var(--yellow)\">LESSONS</span>",
+    revSubP:"Quick-reference revision notes for every GCSE topic. Free for everyone.",
+    note1h:"Algebra", note1p:"Equations, factorising, expanding, quadratics.",
+    note2h:"Fractions, Decimals &amp; %", note2p:"Adding, multiplying, converting, percentages.",
+    note3h:"Geometry &amp; Measures", note3p:"Area, perimeter, Pythagoras, trigonometry.",
+    note4h:"Statistics &amp; Probability", note4p:"Mean, median, mode, range, probability.",
+    note5h:"Number", note5p:"Rounding, powers, standard form, HCF, LCM.",
+    note6h:"Ratio &amp; Proportion", note6p:"Simplifying ratios, dividing quantities, proportion.",
+    // BLOG
+    blogTag:"Maths Blog",
+    blogH2:"TIPS, GUIDES &amp;<br><span style=\"color:var(--electric)\">EXAM ADVICE</span>",
+    blogSubP:"Free resources to help you prepare, revise and boost your maths confidence.",
+    blog1tag:"GCSE", blog1h:"How to Revise for GCSE Maths (and Actually Remember It)", blog1p:"The techniques that work — and the ones that waste your time.", blog1meta:"5 min read · March 2026",
+    blog2tag:"Algebra", blog2h:"Top 5 Algebra Mistakes Students Make (And How to Fix Them)", blog2p:"Simple errors that cost marks — here's how to avoid them.", blog2meta:"4 min read · March 2026",
+    blog3tag:"Mindset", blog3h:"Maths Anxiety Is Real — Here's How to Overcome It", blog3p:"Practical strategies to build confidence and stop dreading maths.", blog3meta:"6 min read · February 2026",
+    // REFERRAL
+    refTag:"Refer a Friend",
+    refH2:"SHARE THE LOVE,<br><span style=\"color:#00C853\">EARN REWARDS</span>",
+    refH3:"🎁 Give a free week, get a free week",
+    refP:"Share your unique referral code. When a friend signs up for Premium, they get their first week free — and so do you.",
+    refBtn1:"Copy My Link →", refBtn2:"Share via WhatsApp",
+    refCodeLabel:"Your Referral Code", refCopyHint:"Click to copy",
+    // FAQ
+    faqTag:"FAQ",
+    faqH2:"GOT QUESTIONS?<br><span style=\"color:var(--electric)\">WE'VE GOT ANSWERS.</span>",
+    faq1q:"What age groups do you teach?", faq1a:"Ages 7 right through to adults of any age — primary, KS3, GCSE, and adult learners returning to education. No minimum or maximum.",
+    faq2q:"Is the app really free?", faq2a:"Yes — 3 daily challenges, 5 bot questions, and 1 mock exam per month completely free. No card required. Premium unlocks everything for £4.99/month.",
+    faq3q:"How does the AI Maths Bot work?", faq3a:"Powered by advanced AI, it can answer any maths question, show step-by-step working, give hints, and remember context throughout your session.",
+    faq4q:"Do I need the app AND lessons?", faq4a:"No — they work independently. The app is great for daily practice. The 1-to-1 lessons are for personalised support. Many students use both together.",
+    faq5q:"What if I need to cancel a lesson?", faq5a:"Just message via WhatsApp. Block bookings don't expire so you never lose sessions. I'm flexible and understanding.",
+    faq6q:"How quickly will I see results?", faq6a:"Most students notice a confidence boost within the first few sessions. GCSE students have improved by 2–3 grades with consistent lessons.",
+    faq7q:"Are lessons available in person near me?", faq7a:"In-person lessons are available in Liverpool, Manchester, North West and Cheshire. Online lessons are available anywhere in the UK via Google Meet or Zoom.",
+    faq7tr:"Are lessons available in Turkish?", faq7atr:"Yes! Eylul is a native Turkish speaker and can deliver all lessons fully in Turkish. This is perfect for Turkish-speaking families across the UK.",
+    faq8q:"Are payments secure?", faq8a:"All payments are processed securely via Stripe. We never store your card details. All transactions are SSL encrypted and PCI compliant.",
+    // CONTACT
+    contactTag:"Get In Touch",
+    contactH2:"LET'S FIND<br>THE RIGHT<br>LESSON FOR YOU",
+    contactP:"Drop me a message and I'll get back to you within a few hours. No pressure, just a friendly chat.",
+    cdLabel1:"WhatsApp", cdLabel2:"In-Person", cdLabel3:"Response Time",
+    cdVal2:"Liverpool · Manchester · NW Cheshire", cdVal3:"Usually within a few hours",
+    formTag:"Free 15-Min Consultation",
+    formName:"Your Name", formEmail:"Email", formWho:"Who Needs Tuition?",
+    formOpt1:"My child (Primary, ages 7–11)", formOpt2:"My child (KS3, ages 11–14)",
+    formOpt3:"My child (GCSE, ages 14–16+)", formOpt4:"Myself (Adult learner)", formOpt5:"Other",
+    formPref:"Lesson Preference",
+    formPref1:"Online (UK-Wide)", formPref2:"In-Person (Liverpool)", formPref3:"In-Person (Manchester)",
+    formPref4:"In-Person (North West)", formPref5:"In-Person (Cheshire)", formPref6:"Not sure yet",
+    formMsg:"Message (optional)", formMsgPh:"Tell me a bit about what you need…",
+    formBtn:"SEND MY ENQUIRY →",
+    formSuccessH:"Message Sent!", formSuccessP:"I'll be in touch within a few hours to arrange your free consultation.",
+    // FOOTER
+    footerCTAh:"READY TO<br><span>LEVEL UP?</span>",
+    footerCTAp:"Start with the free app today, or book a 1-to-1 lesson with Eylul.",
+    footerBtn1:"Open App Free →", footerBtn2:"Book a Lesson", footerBtn3:"Gift Vouchers 🎁", footerBtn4:"Free Consultation",
+    footerLinks:["Terms of Service","Privacy Policy","Contact Us","Blog","Revision Notes","Create Account"],
+    footerCopy:"© 2026 MATHS WITH EYLUL · ONLINE UK-WIDE · LIVERPOOL · MANCHESTER · NORTH WEST · CHESHIRE · ALL RIGHTS RESERVED",
+    // APP
+    appBack:"← Site", appDash:"Home", appChallenge:"Challenge", appExam:"Exam",
+    appBot:"Bot", appRank:"Rank", appProgress:"Progress", appShop:"Shop",
+    appBookBanner:"📚 Book a Lesson with Eylul",
+    appBookBannerS:"1-to-1 personalised support · First lesson 20% off with FIRST20",
+    appBookBtn:"Book Now →",
+    appLevelTitle:"Algebra Apprentice",
+    dsLabel1:"Day Streak", dsSub1:"Keep it going!",
+    dsLabel2:"Avg Exam Score", dsSub2:"Grade B — keep improving!",
+    dsLabel3:"Maths Coins", dsSub3:"Spend in the shop",
+    dsLabel4:"Leaderboard", dsSub4:"600 pts from 3rd place",
+    da1t:"Daily Challenge", da1s:"3 challenges left today · Earn coins",
+    da2t:"Mock Exam", da2s:"GCSE-style · Timed · Instant feedback",
+    da3t:"Maths Bot", da3s:"Ask anything · Step-by-step",
+    da4t:"Leaderboard", da4s:"You're 4th this week · Keep going!",
+    certBannerT:"🏆 CERTIFICATE AVAILABLE!",
+    certBannerS:"You've completed Level 7 — Algebra Apprentice. Claim your certificate.",
+    certBtn:"Get Certificate 🎓",
+    parentLabel:"👨‍👩‍👧 Parent Dashboard",
+    parentWeekH:"WEEKLY SUMMARY", parentTopicH:"TOPIC SNAPSHOT",
+    pw1:"Challenges done", pw2:"Days active", pw3:"Exam average", pw4:"Weakest topic",
+    bookGeoBtn:"Book Geometry Lesson →",
+    challengeH:"DAILY CHALLENGES", challengeP:"Pick a topic · Answer 5 questions · Earn coins & XP",
+    botTitle:"🤖 MATHS BOT", botSub:"Powered by AI · Step-by-step working · 24/7",
+    botWelcome:"👋 Hi! I'm your Maths Bot. Ask me any maths question and I'll walk you through it step by step. I can give hints first, or show you the full working straight away. What are you working on?",
+    botPh:"Type a maths question…",
+    botSug1:"How to factorise quadratics?", botSug2:"What is Pythagoras?", botSug3:"Solve 2x + 5 = 13", botSug4:"Area of a circle radius 7",
+    lbH:"LEADERBOARD", lbWeekly:"Weekly", lbAllTime:"All Time",
+    lbCta:"You're <strong style=\"color:var(--lime)\">600 points</strong> away from 3rd place! Keep doing daily challenges to climb. 🚀",
+    lbCtaBtn:"Do Today's Challenge →",
+    progTopic:"TOPIC MASTERY", progLevel:"LEVEL PROGRESS",
+    progSub:"320 XP to Level 8", progQ:"Questions", progStreak:"Day Streak",
+    progWeak:"📉 Geometry is your weakest topic at 60%. Want Eylul to help you improve it?",
+    progBookBtn:"Book a Geometry Lesson →",
+    upgradeTitle:"💎 UPGRADE TO PREMIUM",
+    upgradeDesc:"Unlimited challenges, full AI bot, unlimited exams & progress dashboard.",
+    shopCoinsH:"Coin Packs",
+    shopSpendH:"Spend Coins",
+    hint5:"Hint Pack", hint5d:"5 hints to use when you're stuck on challenges.", hint5c:"🪙 50 coins", hint5btn:"Buy",
+    lvlSkip:"Level Skip", lvlSkipD:"Unlock the next difficulty level in any topic early.", lvlSkipC:"🪙 150 coins", lvlSkipBtn:"Buy",
+    examH:"MOCK EXAM", examSub:"GCSE-style · Timed · Instant marking with feedback",
+    examF:"Foundation", examFd:"Grades 1–5 · 10 questions · 20 mins",
+    examH2:"Higher", examHd:"Grades 4–9 · 10 questions · 25 mins",
+    examM:"Mixed", examMd:"All topics · 15 questions · 30 mins",
+    examStart:"Start Exam →", examRecent:"Recent Scores",
+    examCompleteH:"EXAM COMPLETE!", examTryAgain:"Try Again", examBookBtn:"Book a Lesson 📚",
+    examCorrect:"Correct", examWrong:"Wrong", examEarned:"Earned",
+    // MODALS
+    loginH:"WELCOME BACK", loginSub:"Sign in to your Maths with Eylul account",
+    loginEmail:"Email", loginPass:"Password", loginBtn:"SIGN IN →",
+    loginSwitch:"No account?", loginSwitchLink:"Sign up free",
+    signupH:"CREATE ACCOUNT", signupSub:"Free to join — start learning today",
+    signupFname:"First Name", signupLname:"Last Name",
+    signupEmail:"Email", signupPass:"Password",
+    signupRole:"I am a…", signupOpt1:"Select…", signupOpt2:"Student", signupOpt3:"Parent", signupOpt4:"Adult learner",
+    signupCheck1:"Send me weekly progress reports and learning tips",
+    signupCheck2:"Enable daily challenge reminders (browser notifications)",
+    signupLegal:"By signing up you agree to our", signupTerms:"Terms of Service", signupAnd:"and", signupPrivacy:"Privacy Policy",
+    signupBtn:"CREATE FREE ACCOUNT →",
+    signupSwitch:"Already have an account?", signupSwitchLink:"Sign in",
+  },
+  tr: {
+    pageTitle: "Eylul ile Matematik — Birebir Matematik Dersleri | Liverpool, Manchester, Kuzey Batı, Cheshire & Online Türkçe",
+    navAbout:"Hakkında", navLessons:"Dersler", navVouchers:"Hediye Çeki", navApp:"Uygulama",
+    navBlog:"Blog", navFaq:"SSS", navConsult:"Ücretsiz Danışma", navSignin:"Giriş Yap", navOpenApp:"Uygulamayı Aç →",
+    bannerText:"🎉 <span>ÜCRETSİZ 15 dakikalık danışma</span> — baskı yok, yükümlülük yok.",
+    bannerBtn:"Hemen Talep Et →",
+    ticker:"📲 TÜM İNGİLTERE · 🏆 HER YAŞ · ✅ BİREBİR · 🎯 GCSE HAZIRLIK · ⭐ 5 YILDIZ · 🤖 YAPAY ZEKA BOT · 🎮 GÜNLÜK SORULAR · 📊 İLERLEME TAKİBİ · 🇹🇷 TÜRKÇE DERS",
+    heroEyebrow:"Ders + Öğrenme Uygulaması · 7 Yaştan Yetişkine · İngiltere",
+    heroDesc:"Birebir dersler ve yapay zeka destekli tam bir öğrenme uygulaması. Günlük sorular, deneme sınavları, matematik botu ve ilerleme takibi — hepsi bir arada.",
+    heroBtn1:"Ücretsiz Uygulamayı Aç →", heroBtn2:"Ücretsiz Danışma",
+    trust1:"⭐⭐⭐⭐⭐ 5 Yıldızlı", trust2:"✓ 7 Yaştan Yetişkine", trust3:"✓ İlk Derste %20 İndirim", trust4:"🤖 Yapay Zeka Destekli",
+    stat1label:"Kişiye Özel", stat2label:"İlk Derste İndirim", stat3label:"Bot 7/24", stat4label:"Günlük Sorular",
+    aboutTag:"Eylul Hakkında",
+    aboutH2:"TÜM YAŞLAR İÇİN<br>DESTEKLEYICI<br><span style=\"color:var(--lime)\">MATEMATİK</span>",
+    aboutP1:"Merhaba, ben Eylul. Her yaş ve seviyeden öğrenciye destek veren, güven inşa eden matematik dersleri sunuyorum. Odak noktam öğrencilerin matematiği <strong style=\"color:var(--white)\">anlamasına</strong> yardımcı olmak — sadece ezberlemek değil. Her ders sakin, net ve size özel.",
+    aboutP2:"Çocuklar, gençler ve yetişkinlerle çalışıyorum — sürekli destek, sınav hazırlığı veya sadece güven artırma ihtiyacınız olsun. Tüm İngiltere'de çevrimiçi ve Liverpool, Manchester, Kuzey Batı &amp; Cheshire'da yüz yüze ders veriyorum.",
+    aboutPill1:"7 Yaştan Yetişkine", aboutPill2:"Tüm İngiltere Online", aboutPill3:"Kuzey Batı &amp; Cheshire",
+    aboutBtn1:"Ücretsiz Danışma →", aboutBtn2:"Ders Rezervasyonu",
+    aboutBoxH3:"Ne Sunuyorum",
+    offer1:"İlkokul", offer1p:"Sayılar, aritmetik &amp; problem çözme.", offer1tag:"7–11 Yaş",
+    offer2:"KS3", offer2p:"Cebir, geometri &amp; istatistik.", offer2tag:"11–14 Yaş",
+    offer3:"GCSE", offer3p:"Sınav hazırlığı &amp; geçmiş sorular.", offer3tag:"14–16+ Yaş",
+    offer4:"Yetişkin", offer4p:"Matematiğe dönüş, yargılama yok.", offer4tag:"18+",
+    offer5:"Online", offer5p:"Google Meet veya Zoom, tüm İngiltere.", offer5tag:"Her Yerden",
+    offer6:"Yüz Yüze", offer6p:"Liverpool, Manchester, Kuzey Batı &amp; Cheshire.", offer6tag:"Kuzey Batı",
+    tutoringTag:"Birebir Dersler",
+    tutoringH2:"DERS FİYATLARI &amp;<br><span style=\"color:var(--lime)\">PAKETLER</span>",
+    tutoringSubP:"Tüm dersler kişiye özel ve esnektir. Tüm İngiltere'de online veya Liverpool, Manchester, Kuzey Batı &amp; Cheshire'da yüz yüze.",
+    tp1h:"Tek Ders", tp1price:"£50", tp1unit:"/ saat",
+    tp1desc:"Taahhüt vermeden denemek için mükemmel. Tek seferlik destek veya tanışma dersi için idealdir.",
+    tp1discount:"İlk derste %20 indirim", tp1btn1:"Şimdi Rezervasyon →", tp1btn2:"Önce Ücretsiz Danışma",
+    tp2h:"5 Derslık Paket", tp2price:"£250", tp2unit:"/ paket",
+    tp2desc:"Daha kısa taahhütle iyi bir ivme. Sınav hazırlığı veya konu tamamlama için idealdir.",
+    tp2discount:"%10 indirim", tp2btn:"Paketi Rezerve Et →",
+    tp3badge:"🔥 En İyi Değer", tp3h:"10 Derslık Paket", tp3price:"£500", tp3unit:"/ paket",
+    tp3desc:"Sürekli haftalık destek için en iyi değer. 10 kişisel derste gerçek ilerleme.",
+    tp3discount:"%25 indirim", tp3btn:"Paketi Rezerve Et →",
+    subsLabel:"Uzun Dönem Abonelikler",
+    sub1h:"6 Aylık Abonelik", sub1price:"£1,300", sub1unit:"/ 26 ders",
+    sub1desc:"Yarım yıl tutarlı destek. <strong style=\"color:var(--electric)\">YEAR26</strong> koduyla %10 indirim.",
+    sub1btn:"Abone Ol →",
+    sub2h:"Yıllık Abonelik", sub2price:"£2,600", sub2unit:"/ 52 ders",
+    sub2desc:"Tam bir yıl haftalık dersler. <strong style=\"color:var(--electric)\">YEAR52</strong> koduyla %10 indirim.",
+    sub2btn:"Abone Ol →",
+    step1t:"Ücretsiz Danışma", step1d:"15 dk sohbet, baskısız",
+    step2t:"Rezervasyon &amp; Ödeme", step2d:"Stripe ile güvenli",
+    step3t:"Bağlantı Kuralım", step3d:"Meet, Zoom veya yüz yüze",
+    step4t:"Seviye Atlayın", step4d:"Gerçek ilerleme, gerçek güven",
+    vouchTag:"Hediye Çekleri",
+    vouchH2:"GÜVEN HEDİYE ET",
+    vouchP:"Doğum günleri, sınav hazırlığı veya birinin güven artırma desteğine ihtiyacı olduğu her an için mükemmel. Dijital teslimat, son kullanma tarihi yok.",
+    vperk1:"Online dersler için kullanılabilir", vperk2:"Her yaş &amp; seviyeye uygun",
+    vperk3:"Dijital teslimat — son kullanma tarihi yok", vperk4:"Esnek programlama",
+    vouchBtn:"Hediye Çeki Satın Al →", vouchCardLabel:"Hediye Çeki · Online Dersler",
+    appTag:"Platform",
+    appH2:"DERSLER + TAM BİR<br><span style=\"color:var(--electric)\">ÖĞRENME UYGULAMASI</span>",
+    feat1t:"Yapay Zeka Matematik Botu", feat1d:"Her şeyi sor, adım adım çözüm al, ipuçları — 7/24 kullanılabilir.",
+    feat2t:"Günlük Sorular", feat2d:"6 konuda her gün yeni sorular. Coin kazan, seri oluştur, seviye atla.",
+    feat3t:"GCSE Deneme Sınavları", feat3d:"Anlık puanlama, not tahmini ve skor geçmişiyle zamanlı sınavlar.",
+    feat4t:"İlerleme Takibi", feat4d:"Seviye, XP, konu hakimiyeti ve serileri gösteren görsel paneller.",
+    feat5t:"Liderlik Tablosu", feat5d:"Haftalık ve tüm zamanlar sıralaması. Zirvede yerini kazan.",
+    feat6t:"Coinler &amp; Ödüller", feat6d:"Sorularla coin kazan. İpuçları ve üst seviyeleri açmak için harca.",
+    appFreeH:"ÜCRETSİZ BAŞLA",
+    appFreeP:"Günlük 3 soru ücretsiz. Sınırsız erişim, tam yapay zeka botu ve tüm deneme sınavları için yükselt.",
+    appTryBtn:"Ücretsiz Dene — Kayıt Gerekmez →",
+    testiTag:"Gerçek Sonuçlar",
+    testiH2:"ÖĞRENCİLER<br><span style=\"color:var(--coral)\">NE DİYOR</span>",
+    t1q:'"Eylul kızımın matematiğe bakış açısını tamamen değiştirdi. GCSE notu 3\'ten 6\'ya çıktı — daha mutlu olamazdık."',
+    t1name:"Sarah M.", t1role:"GCSE Öğrencisinin Velisi",
+    t2q:'"Okuldan beri matematik yapmamıştım. Eylul göz korkutucu olmaktan çıkardı ve fonksiyonel beceriler sınavımı ilk seferde geçtim. İnanılmaz."',
+    t2name:"James T.", t2role:"Yetişkin Öğrenci",
+    t3q:'"Oğlum 8. sınıf cebirinde zorlanıyordu. 5 ders sonra sınıfının önüne geçti. Sabır ve açıklamalar mükemmel."',
+    t3name:"Rachel K.", t3role:"KS3 Öğrencisinin Velisi",
+    rLabel:"47 Değerlendirme",
+    rm1:'"Harika öğretmen, çok sabırlı ve net."', rm2:'"Oğlumun özgüveni çok arttı."', rm3:'"Bulduğumuz en iyi matematik öğretmeni. Kesinlikle tavsiye ederim."',
+    pricingTag:"Fiyatlar",
+    pricingH2:"NET FİYATLAR.<br>SÜRPRİZ YOK.",
+    pricingAppLabel:"📱 Uygulama Abonelikleri",
+    pricingTutorLabel:"📚 Birebir Dersler",
+    pricingCoinsLabel:"🪙 Coin Mağazası (Uygulama İçi)",
+    pcFreeH:"Ücretsiz", pcFree1:"Günlük 3 soru", pcFree2:"Günlük 5 bot sorusu", pcFree3:"Ayda 1 sınav", pcFree4:"Liderlik tablosunu görüntüle",
+    pcFreeBtn:"Ücretsiz Başla",
+    pcPremH:"Premium", pcPrem1:"Sınırsız sorular", pcPrem2:"Tam yapay zeka botu", pcPrem3:"Sınırsız sınavlar", pcPrem4:"İlerleme paneli", pcPrem5:"Sertifikalar", pcPrem6:"Liderlik tablosu",
+    pcPremBtn:"Yükselt",
+    pcYearH:"Yıllık", pcYear1:"Premium'daki her şey", pcYear2:"2 ay ücretsiz", pcYear3:"Öncelikli destek", pcYear4:"2. Aşamaya erken erişim",
+    pcYearBtn:"Yıllığa Geç",
+    pcSingleH:"Tek Ders", pcSingleDesc:"İlk dersinizde %20 indirim için FIRST20 kodu.", pcSingleBtn:"Şimdi Rezervasyon",
+    pcBlockH:"10 Derslık Paket", pcBlockDesc:"En iyi değer. Kod: LESSON10", pcBlockBtn:"Paketi Rezerve Et",
+    pcBlockBadge:"💰 %25 Tasarruf",
+    coin1name:"100 Coin", coin1sub:"Başlangıç paketi",
+    coin2name:"350 Coin", coin2sub:"En popüler",
+    coin3name:"1.000 Coin", coin3sub:"En iyi değer",
+    coin4name:"Aile Paketi", coin4sub:"3 öğrenci",
+    revTag:"Ücretsiz Çalışma Notları",
+    revH2:"DERSLER ARASINDA<br><span style=\"color:var(--yellow)\">ÇALIŞ</span>",
+    revSubP:"Her GCSE konusu için hızlı başvuru notları. Herkese ücretsiz.",
+    note1h:"Cebir", note1p:"Denklemler, çarpanlara ayırma, açma, ikinci dereceden denklemler.",
+    note2h:"Kesirler, Ondalıklar &amp; %", note2p:"Toplama, çarpma, dönüştürme, yüzdeler.",
+    note3h:"Geometri &amp; Ölçüler", note3p:"Alan, çevre, Pisagor, trigonometri.",
+    note4h:"İstatistik &amp; Olasılık", note4p:"Ortalama, medyan, mod, aralık, olasılık.",
+    note5h:"Sayılar", note5p:"Yuvarlama, kuvvetler, standart form, EBOB, EKOK.",
+    note6h:"Oran &amp; Orantı", note6p:"Oranları sadeleştirme, miktarları bölme, orantı.",
+    blogTag:"Matematik Blogu",
+    blogH2:"İPUÇLARI, REHBERLER &amp;<br><span style=\"color:var(--electric)\">SINAV ÖNERİLERİ</span>",
+    blogSubP:"Hazırlanmanıza, tekrar etmenize ve matematik güveninizi artırmanıza yardımcı olacak ücretsiz kaynaklar.",
+    blog1tag:"GCSE", blog1h:"GCSE Matematiği Nasıl Çalışılır (ve Gerçekten Hatırlanır)", blog1p:"İşe yarayan teknikler — ve zamanınızı boşa harcayanlar.", blog1meta:"5 dk okuma · Mart 2026",
+    blog2tag:"Cebir", blog2h:"Öğrencilerin Yaptığı 5 Temel Cebir Hatası (ve Nasıl Düzeltilir)", blog2p:"Not kaybettiren basit hatalar — bunlardan nasıl kaçınılır.", blog2meta:"4 dk okuma · Mart 2026",
+    blog3tag:"Motivasyon", blog3h:"Matematik Kaygısı Gerçek — İşte Nasıl Üstesinden Gelinir", blog3p:"Güven inşa etmek ve matematikten korkmayı bırakmak için pratik stratejiler.", blog3meta:"6 dk okuma · Şubat 2026",
+    refTag:"Arkadaş Tavsiye Et",
+    refH2:"SEVGİYİ PAYLAŞ,<br><span style=\"color:#00C853\">ÖDÜL KAZAN</span>",
+    refH3:"🎁 Bir hafta bedava ver, bir hafta bedava al",
+    refP:"Benzersiz tavsiye kodunu paylaş. Bir arkadaşın Premium'a kaydolduğunda, o ilk haftayı ücretsiz alır — sen de.",
+    refBtn1:"Linkimi Kopyala →", refBtn2:"WhatsApp ile Paylaş",
+    refCodeLabel:"Tavsiye Kodun", refCopyHint:"Kopyalamak için tıkla",
+    faqTag:"SSS",
+    faqH2:"SORULARINIZ VAR MI?<br><span style=\"color:var(--electric)\">CEVAPLARIMIZ HAZIR.</span>",
+    faq1q:"Hangi yaş gruplarına ders veriyorsunuz?", faq1a:"7 yaştan her yaşta yetişkine — ilkokul, KS3, GCSE ve eğitime geri dönen yetişkinler. Minimum veya maksimum yaş yok.",
+    faq2q:"Uygulama gerçekten ücretsiz mi?", faq2a:"Evet — günlük 3 soru, 5 bot sorusu ve ayda 1 deneme sınavı tamamen ücretsiz. Kart gerekmez. Premium her şeyin kilidini aylık 4.99£ karşılığında açar.",
+    faq3q:"Yapay Zeka Matematik Botu nasıl çalışır?", faq3a:"Gelişmiş yapay zeka ile desteklenen bot, herhangi bir matematik sorusunu yanıtlayabilir, adım adım çözüm gösterebilir, ipuçları verebilir ve oturum boyunca bağlamı hatırlayabilir.",
+    faq4q:"Hem uygulamaya hem derslere ihtiyacım var mı?", faq4a:"Hayır — bağımsız olarak çalışırlar. Uygulama günlük pratik için harika. Birebir dersler kişisel destek içindir. Pek çok öğrenci ikisini birlikte kullanır.",
+    faq5q:"Dersi iptal etmem gerekirse ne olur?", faq5a:"WhatsApp üzerinden mesaj atmanız yeterli. Paket rezervasyonlarının süresi dolmaz, dolayısıyla hiçbir dersi kaybetmezsiniz. Esnek ve anlayışlıyım.",
+    faq6q:"Sonuçları ne zaman görürüm?", faq6a:"Çoğu öğrenci ilk birkaç derste güven artışı fark eder. GCSE öğrencileri tutarlı derslerle 2–3 derece ilerleme kaydetti.",
+    faq7q:"Dersler Türkçe verilebilir mi?", faq7a:"Evet! Eylul ana dili Türkçe olan biriyim ve tüm dersleri tamamen Türkçe verebiliyorum. Birleşik Krallık'taki Türkçe konuşan aileler için mükemmeldir.",
+    faq8q:"Ödemeler güvenli mi?", faq8a:"Tüm ödemeler Stripe aracılığıyla güvenli bir şekilde işlenir. Kart bilgilerinizi hiçbir zaman saklamayız. Tüm işlemler SSL şifreli ve PCI uyumludur.",
+    contactTag:"İletişime Geçin",
+    contactH2:"SİZE UYGUN<br>DERSİ<br>BULALIM",
+    contactP:"Bir mesaj bırakın, birkaç saat içinde geri döneyim. Baskı yok, sadece samimi bir sohbet.",
+    cdLabel1:"WhatsApp", cdLabel2:"Yüz Yüze", cdLabel3:"Yanıt Süresi",
+    cdVal2:"Liverpool · Manchester · Kuzey Batı Cheshire", cdVal3:"Genellikle birkaç saat içinde",
+    formTag:"Ücretsiz 15 Dk Danışma",
+    formName:"Adınız", formEmail:"E-posta", formWho:"Kim Ders Alacak?",
+    formOpt1:"Çocuğum (İlkokul, 7–11 yaş)", formOpt2:"Çocuğum (KS3, 11–14 yaş)",
+    formOpt3:"Çocuğum (GCSE, 14–16+ yaş)", formOpt4:"Ben (Yetişkin öğrenci)", formOpt5:"Diğer",
+    formPref:"Ders Tercihi",
+    formPref1:"Online (Tüm İngiltere)", formPref2:"Yüz Yüze (Liverpool)", formPref3:"Yüz Yüze (Manchester)",
+    formPref4:"Yüz Yüze (Kuzey Batı)", formPref5:"Yüz Yüze (Cheshire)", formPref6:"Henüz emin değilim",
+    formMsg:"Mesaj (isteğe bağlı)", formMsgPh:"İhtiyacınız hakkında biraz bilgi verin…",
+    formBtn:"SORGUYU GÖNDER →",
+    formSuccessH:"Mesaj Gönderildi!", formSuccessP:"Ücretsiz danışmanızı düzenlemek için birkaç saat içinde sizinle iletişime geçeceğim.",
+    footerCTAh:"SEVIYE<br><span>ATMAYA HAZIR MISINIZ?</span>",
+    footerCTAp:"Bugün ücretsiz uygulamayla başlayın veya Eylul ile birebir ders rezervasyonu yapın.",
+    footerBtn1:"Ücretsiz Uygulamayı Aç →", footerBtn2:"Ders Rezervasyonu", footerBtn3:"Hediye Çekleri 🎁", footerBtn4:"Ücretsiz Danışma",
+    footerLinks:["Kullanım Şartları","Gizlilik Politikası","İletişim","Blog","Çalışma Notları","Hesap Oluştur"],
+    footerCopy:"© 2026 EYLUL İLE MATEMATİK · TÜM İNGİLTERE · LİVERPOOL · MANCHESTER · KUZEY BATI · CHESHIRE · TÜM HAKLARI SAKLIDIR",
+    appBack:"← Site", appDash:"Ana Sayfa", appChallenge:"Soru", appExam:"Sınav",
+    appBot:"Bot", appRank:"Sıralama", appProgress:"İlerleme", appShop:"Mağaza",
+    appBookBanner:"📚 Eylul ile Ders Rezervasyonu",
+    appBookBannerS:"Birebir kişisel destek · FIRST20 kodu ile ilk derste %20 indirim",
+    appBookBtn:"Şimdi Rezervasyon →",
+    appLevelTitle:"Cebir Çırağı",
+    dsLabel1:"Seri", dsSub1:"Devam et!",
+    dsLabel2:"Ort. Sınav Notu", dsSub2:"B Notu — gelişmeye devam et!",
+    dsLabel3:"Matematik Coinleri", dsSub3:"Mağazada harca",
+    dsLabel4:"Liderlik Tablosu", dsSub4:"3. sıraya 600 puan var",
+    da1t:"Günlük Soru", da1s:"Bugün 3 soru kaldı · Coin kazan",
+    da2t:"Deneme Sınavı", da2s:"GCSE tarzı · Zamanlı · Anlık geri bildirim",
+    da3t:"Matematik Botu", da3s:"Her şeyi sor · Adım adım",
+    da4t:"Liderlik Tablosu", da4s:"Bu hafta 4. sıradasın · Devam et!",
+    certBannerT:"🏆 SERTİFİKA HAZIR!",
+    certBannerS:"Seviye 7'yi tamamladın — Cebir Çırağı. Sertifikanı al.",
+    certBtn:"Sertifika Al 🎓",
+    parentLabel:"👨‍👩‍👧 Veli Paneli",
+    parentWeekH:"HAFTALIK ÖZET", parentTopicH:"KONU GÖRÜNÜMÜ",
+    pw1:"Tamamlanan sorular", pw2:"Aktif günler", pw3:"Sınav ortalaması", pw4:"En zayıf konu",
+    bookGeoBtn:"Geometri Dersi Rezervasyonu →",
+    challengeH:"GÜNLÜK SORULAR", challengeP:"Konu seç · 5 soru yanıtla · Coin ve XP kazan",
+    botTitle:"🤖 MATEMATİK BOTU", botSub:"Yapay Zeka Destekli · Adım Adım Çözüm · 7/24",
+    botWelcome:"👋 Merhaba! Ben Matematik Botuyum. Herhangi bir matematik sorusu sor, adım adım anlatalım. İpuçları veya tam çözüm — sen seç. Ne üzerinde çalışıyorsun?",
+    botPh:"Matematik sorusu yaz…",
+    botSug1:"İkinci dereceden nasıl çarpanlara ayırılır?", botSug2:"Pisagor teoremi nedir?", botSug3:"2x + 5 = 13 çöz", botSug4:"Yarıçapı 7 olan dairenin alanı",
+    lbH:"LİDERLİK TABLOSU", lbWeekly:"Haftalık", lbAllTime:"Tüm Zamanlar",
+    lbCta:"3. sıraya <strong style=\"color:var(--lime)\">600 puan</strong> kaldı! Günlük soruları çözmeye devam et. 🚀",
+    lbCtaBtn:"Bugünkü Soruyu Çöz →",
+    progTopic:"KONU HAKİMİYETİ", progLevel:"SEVİYE İLERLEMESİ",
+    progSub:"Seviye 8'e 320 XP", progQ:"Soru", progStreak:"Gün Serisi",
+    progWeak:"📉 En zayıf konun Geometri (%60). Eylul'un yardım etmesini ister misin?",
+    progBookBtn:"Geometri Dersi Rezervasyonu →",
+    upgradeTitle:"💎 PREMİUM'A YÜKSELTİN",
+    upgradeDesc:"Sınırsız sorular, tam yapay zeka botu, sınırsız sınavlar ve ilerleme paneli.",
+    shopCoinsH:"Coin Paketleri",
+    shopSpendH:"Coin Harca",
+    hint5:"İpucu Paketi", hint5d:"Sorularda takıldığında kullanabileceğin 5 ipucu.", hint5c:"🪙 50 coin", hint5btn:"Satın Al",
+    lvlSkip:"Seviye Atlama", lvlSkipD:"Herhangi bir konuda bir sonraki zorluk seviyesini erken aç.", lvlSkipC:"🪙 150 coin", lvlSkipBtn:"Satın Al",
+    examH:"DENEME SINAVI", examSub:"GCSE tarzı · Zamanlı · Anlık puanlama ve geri bildirim",
+    examF:"Temel", examFd:"1–5 Derece · 10 soru · 20 dk",
+    examH2:"Yüksek", examHd:"4–9 Derece · 10 soru · 25 dk",
+    examM:"Karışık", examMd:"Tüm konular · 15 soru · 30 dk",
+    examStart:"Sınavı Başlat →", examRecent:"Son Sonuçlar",
+    examCompleteH:"SINAV TAMAMLANDI!", examTryAgain:"Tekrar Dene", examBookBtn:"Ders Rezervasyonu 📚",
+    examCorrect:"Doğru", examWrong:"Yanlış", examEarned:"Kazanıldı",
+    loginH:"HOŞ GELDİNİZ", loginSub:"Eylul ile Matematik hesabınıza giriş yapın",
+    loginEmail:"E-posta", loginPass:"Şifre", loginBtn:"GİRİŞ YAP →",
+    loginSwitch:"Hesabınız yok mu?", loginSwitchLink:"Ücretsiz kayıt ol",
+    signupH:"HESAP OLUŞTUR", signupSub:"Katılmak ücretsiz — bugün öğrenmeye başlayın",
+    signupFname:"Ad", signupLname:"Soyad",
+    signupEmail:"E-posta", signupPass:"Şifre",
+    signupRole:"Ben bir…", signupOpt1:"Seçin…", signupOpt2:"Öğrenciyim", signupOpt3:"Veliyim", signupOpt4:"Yetişkin öğrenci",
+    signupCheck1:"Haftalık ilerleme raporları ve öğrenme ipuçları gönder",
+    signupCheck2:"Günlük soru hatırlatıcılarını etkinleştir (tarayıcı bildirimleri)",
+    signupLegal:"Kaydolarak", signupTerms:"Kullanım Şartlarımızı", signupAnd:"ve", signupPrivacy:"Gizlilik Politikamızı",
+    signupBtn:"ÜCRETSİZ HESAP OLUŞTUR →",
+    signupSwitch:"Zaten hesabınız var mı?", signupSwitchLink:"Giriş yapın",
+  }
+};
+
+let currentLang = localStorage.getItem('mwe_lang') || 'en';
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'tr' : 'en';
+  localStorage.setItem('mwe_lang', currentLang);
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const t = translations[currentLang];
+  const isEn = currentLang === 'en';
+
+  // Toggle button UI
+  document.getElementById('lang-flag').textContent = isEn ? '🇹🇷' : '🇬🇧';
+  document.getElementById('lang-label').textContent = isEn ? 'Türkçe' : 'English';
+  document.title = t.pageTitle;
+  document.documentElement.lang = isEn ? 'en' : 'tr';
+
+  // Helper to set inner HTML of element by id
+  const s = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val; };
+  // Helper to set text content
+  const st = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  // Helper to set placeholder
+  const sp = (id, val) => { const el = document.getElementById(id); if(el) el.placeholder = val; };
+
+  // NAV links
+  const navLinks = document.querySelectorAll('.mnav-links a');
+  const navKeys = ['navAbout','navLessons','navVouchers','navApp','navBlog','navFaq','navConsult'];
+  navLinks.forEach((a, i) => { if(navKeys[i]) a.textContent = t[navKeys[i]]; });
+  const navSignin = document.getElementById('nav-signin');
+  if(navSignin) navSignin.textContent = t.navSignin;
+
+  // BANNER
+  const bannerP = document.querySelector('.top-banner p');
+  if(bannerP) bannerP.innerHTML = t.bannerText;
+  const bannerBtn = document.querySelector('.top-banner .btn');
+  if(bannerBtn) bannerBtn.textContent = t.bannerBtn;
+
+  // TICKER — update all .ti spans
+  const tickerInner = document.querySelector('.ticker-inner');
+  if(tickerInner) {
+    const items = t.ticker.split(' · ');
+    tickerInner.innerHTML = [...items,...items].map(i=>`<span class="ti">${i}</span>`).join('');
+  }
+
+  // HERO
+  const eyebrow = document.querySelector('.eyebrow');
+  if(eyebrow) { eyebrow.innerHTML = `<div class="dot"></div>${t.heroEyebrow}`; }
+  const heroDesc = document.querySelector('.hero-desc');
+  if(heroDesc) heroDesc.textContent = t.heroDesc;
+  const heroBtns = document.querySelectorAll('.hero-btns .btn');
+  if(heroBtns[0]) heroBtns[0].textContent = t.heroBtn1;
+  if(heroBtns[1]) heroBtns[1].textContent = t.heroBtn2;
+  const trustItems = document.querySelectorAll('.trust-item');
+  ['trust1','trust2','trust3','trust4'].forEach((k,i) => { if(trustItems[i]) trustItems[i].innerHTML = `<em>${t[k].split(' ')[0]}</em> ${t[k].split(' ').slice(1).join(' ')}`; });
+
+  // STATS BAR
+  const slabels = document.querySelectorAll('.sl');
+  ['stat1label','stat2label','stat3label','stat4label'].forEach((k,i)=>{ if(slabels[i]) slabels[i].textContent = t[k]; });
+
+  // ABOUT
+  const aboutStag = document.querySelector('#about .stag');
+  if(aboutStag) aboutStag.textContent = t.aboutTag;
+  const aboutH2 = document.querySelector('#about .sh');
+  if(aboutH2) aboutH2.innerHTML = t.aboutH2;
+  const aboutParas = document.querySelectorAll('#about .about-grid > div:first-child p');
+  if(aboutParas[0]) aboutParas[0].innerHTML = t.aboutP1;
+  if(aboutParas[1]) aboutParas[1].innerHTML = t.aboutP2;
+  const agePills = document.querySelectorAll('.age-pill');
+  if(agePills[0]) agePills[0].textContent = t.aboutPill1;
+  if(agePills[1]) agePills[1].textContent = t.aboutPill2;
+  if(agePills[2]) agePills[2].textContent = t.aboutPill3;
+  const aboutBtns = document.querySelectorAll('#about .about-grid > div:first-child .btn');
+  if(aboutBtns[0]) aboutBtns[0].textContent = t.aboutBtn1;
+  if(aboutBtns[1]) aboutBtns[1].textContent = t.aboutBtn2;
+  const aboutBoxH3 = document.querySelector('.about-box h3');
+  if(aboutBoxH3) aboutBoxH3.textContent = t.aboutBoxH3;
+  const offerCards = document.querySelectorAll('.offer-card');
+  [['offer1','offer1p','offer1tag'],['offer2','offer2p','offer2tag'],['offer3','offer3p','offer3tag'],
+   ['offer4','offer4p','offer4tag'],['offer5','offer5p','offer5tag'],['offer6','offer6p','offer6tag']].forEach(([h,p,tag],i)=>{
+    if(!offerCards[i]) return;
+    const h4 = offerCards[i].querySelector('h4'); if(h4) h4.textContent = t[h];
+    const pp = offerCards[i].querySelector('p'); if(pp) pp.innerHTML = t[p];
+    const sp2 = offerCards[i].querySelector('.age-tag'); if(sp2) sp2.textContent = t[tag];
+  });
+
+  // TUTORING
+  const tutStag = document.querySelector('#tutoring .stag');
+  if(tutStag) tutStag.textContent = t.tutoringTag;
+  const tutH2 = document.querySelector('#tutoring .sh');
+  if(tutH2) tutH2.innerHTML = t.tutoringH2;
+  const tutSubP = document.querySelector('#tutoring > p');
+  if(tutSubP) tutSubP.textContent = t.tutoringSubP;
+  const tpCards = document.querySelectorAll('.tp-card');
+  if(tpCards[0]) {
+    tpCards[0].querySelector('h3').textContent = t.tp1h;
+    tpCards[0].querySelector('.tp-price').innerHTML = t.tp1price + ' <span class="tp-unit">' + t.tp1unit + '</span>';
+    tpCards[0].querySelector('.tp-desc').textContent = t.tp1desc;
+    const cc0 = tpCards[0].querySelector('.code-chip');
+    if(cc0) cc0.querySelector('span:first-child').textContent = t.tp1discount;
+    const tp1btns = tpCards[0].querySelectorAll('.btn');
+    if(tp1btns[0]) tp1btns[0].textContent = t.tp1btn1;
+    if(tp1btns[1]) tp1btns[1].textContent = t.tp1btn2;
+  }
+  if(tpCards[1]) {
+    tpCards[1].querySelector('h3').textContent = t.tp2h;
+    tpCards[1].querySelector('.tp-price').innerHTML = t.tp2price + ' <span class="tp-unit">' + t.tp2unit + '</span>';
+    tpCards[1].querySelector('.tp-desc').textContent = t.tp2desc;
+    const cc1 = tpCards[1].querySelector('.code-chip');
+    if(cc1) cc1.querySelector('span:first-child').textContent = t.tp2discount;
+    const tp2btn = tpCards[1].querySelector('.btn'); if(tp2btn) tp2btn.textContent = t.tp2btn;
+  }
+  if(tpCards[2]) {
+    const badge2 = tpCards[2].querySelector('.tp-badge'); if(badge2) badge2.textContent = t.tp3badge;
+    tpCards[2].querySelector('h3').textContent = t.tp3h;
+    tpCards[2].querySelector('.tp-price').innerHTML = t.tp3price + ' <span class="tp-unit">' + t.tp3unit + '</span>';
+    tpCards[2].querySelector('.tp-desc').textContent = t.tp3desc;
+    const cc2 = tpCards[2].querySelector('.code-chip');
+    if(cc2) cc2.querySelector('span:first-child').textContent = t.tp3discount;
+    const tp3btn = tpCards[2].querySelector('button'); if(tp3btn) tp3btn.textContent = t.tp3btn;
+  }
+  const subsLabelEl = document.querySelector('.subs-grid').previousElementSibling;
+  if(subsLabelEl && subsLabelEl.tagName!=='SECTION') subsLabelEl.textContent = t.subsLabel;
+  const subCards = document.querySelectorAll('.sub-card');
+  if(subCards[0]) {
+    subCards[0].querySelector('h3').textContent = t.sub1h;
+    subCards[0].querySelector('.sub-price').innerHTML = t.sub1price + ' <span class="sub-unit">' + t.sub1unit + '</span>';
+    subCards[0].querySelector('.sub-desc').innerHTML = t.sub1desc;
+    const s1btn = subCards[0].querySelector('.btn'); if(s1btn) s1btn.textContent = t.sub1btn;
+  }
+  if(subCards[1]) {
+    subCards[1].querySelector('h3').textContent = t.sub2h;
+    subCards[1].querySelector('.sub-price').innerHTML = t.sub2price + ' <span class="sub-unit">' + t.sub2unit + '</span>';
+    subCards[1].querySelector('.sub-desc').innerHTML = t.sub2desc;
+    const s2btn = subCards[1].querySelector('.btn'); if(s2btn) s2btn.textContent = t.sub2btn;
+  }
+  const steps = document.querySelectorAll('.steps-strip > div');
+  [['step1t','step1d'],['step2t','step2d'],['step3t','step3d'],['step4t','step4d']].forEach(([tt,td],i)=>{
+    if(!steps[i]) return;
+    const stt = steps[i].querySelector('.step-t'); if(stt) stt.innerHTML = t[tt];
+    const std = steps[i].querySelector('.step-d'); if(std) std.textContent = t[td];
+  });
+
+  // VOUCHERS
+  const vStag = document.querySelector('#vouchers .stag');
+  if(vStag) vStag.textContent = t.vouchTag;
+  const vH2 = document.querySelector('#vouchers .sh');
+  if(vH2) vH2.innerHTML = t.vouchH2;
+  const vP = document.querySelector('#vouchers .voucher-wrap > div:first-child > p');
+  if(vP) vP.textContent = t.vouchP;
+  const vPerks = document.querySelectorAll('.v-perks li');
+  ['vperk1','vperk2','vperk3','vperk4'].forEach((k,i)=>{ if(vPerks[i]) vPerks[i].innerHTML = `<div class="v-check">✓</div>${t[k]}`; });
+  const vBtn = document.querySelector('#vouchers .btn-lime');
+  if(vBtn) vBtn.textContent = t.vouchBtn;
+  const vCardLabel = document.querySelector('.vc-label');
+  if(vCardLabel) vCardLabel.textContent = t.vouchCardLabel;
+
+  // APP SECTION
+  const appStag = document.querySelector('#app-section .stag');
+  if(appStag) appStag.textContent = t.appTag;
+  const appH2 = document.querySelector('#app-section .sh');
+  if(appH2) appH2.innerHTML = t.appH2;
+  const fiTitles = document.querySelectorAll('.fi-title');
+  const fiDescs = document.querySelectorAll('.fi-desc');
+  ['feat1t','feat2t','feat3t','feat4t','feat5t','feat6t'].forEach((k,i)=>{ if(fiTitles[i]) fiTitles[i].textContent = t[k]; });
+  ['feat1d','feat2d','feat3d','feat4d','feat5d','feat6d'].forEach((k,i)=>{ if(fiDescs[i]) fiDescs[i].textContent = t[k]; });
+  const appFreeH = document.querySelector('.price-callout h3');
+  if(appFreeH) appFreeH.textContent = t.appFreeH;
+  const appFreeP = document.querySelector('.price-callout p');
+  if(appFreeP) appFreeP.textContent = t.appFreeP;
+  const appTryBtn = document.querySelector('#app-section .btn-lime');
+  if(appTryBtn) appTryBtn.textContent = t.appTryBtn;
+
+  // TESTIMONIALS
+  const testiStag = document.querySelector('.testi-grid').previousElementSibling.previousElementSibling;
+  if(testiStag && testiStag.classList.contains('stag')) testiStag.textContent = t.testiTag;
+  const tCards = document.querySelectorAll('.tc');
+  if(tCards[0]) { tCards[0].querySelector('blockquote').textContent = t.t1q; tCards[0].querySelector('.tc-name').textContent = t.t1name; tCards[0].querySelector('.tc-role').textContent = t.t1role; }
+  if(tCards[1]) { tCards[1].querySelector('blockquote').textContent = t.t2q; tCards[1].querySelector('.tc-name').textContent = t.t2name; tCards[1].querySelector('.tc-role').textContent = t.t2role; }
+  if(tCards[2]) { tCards[2].querySelector('blockquote').textContent = t.t3q; tCards[2].querySelector('.tc-name').textContent = t.t3name; tCards[2].querySelector('.tc-role').textContent = t.t3role; }
+  const rsLabel = document.querySelector('.rs-label');
+  if(rsLabel) rsLabel.textContent = t.rLabel;
+  const rmTexts = document.querySelectorAll('.rm-text');
+  if(rmTexts[0]) rmTexts[0].textContent = t.rm1;
+  if(rmTexts[1]) rmTexts[1].textContent = t.rm2;
+  if(rmTexts[2]) rmTexts[2].textContent = t.rm3;
+
+  // PRICING section
+  const pricingStag = document.querySelector('#pricing .stag');
+  if(pricingStag) pricingStag.textContent = t.pricingTag;
+  const pricingH2 = document.querySelector('#pricing .sh');
+  if(pricingH2) pricingH2.innerHTML = t.pricingH2;
+  const pricingBoxTitles = document.querySelectorAll('.pricing-box-title');
+  if(pricingBoxTitles[0]) pricingBoxTitles[0].textContent = t.pricingAppLabel;
+  if(pricingBoxTitles[1]) pricingBoxTitles[1].textContent = t.pricingTutorLabel;
+  const pcBoxes = document.querySelectorAll('.pc');
+  if(pcBoxes.length >= 3) {
+    pcBoxes[0].querySelector('h3').textContent = t.pcFreeH;
+    const freeFeats = pcBoxes[0].querySelectorAll('.pc-features li');
+    ['pcFree1','pcFree2','pcFree3','pcFree4'].forEach((k,i)=>{ if(freeFeats[i]) freeFeats[i].textContent = t[k]; });
+    const freeBtn = pcBoxes[0].querySelector('.btn'); if(freeBtn) freeBtn.textContent = t.pcFreeBtn;
+    pcBoxes[1].querySelector('h3').textContent = t.pcPremH;
+    const premFeats = pcBoxes[1].querySelectorAll('.pc-features li');
+    ['pcPrem1','pcPrem2','pcPrem3','pcPrem4','pcPrem5','pcPrem6'].forEach((k,i)=>{ if(premFeats[i]) premFeats[i].textContent = t[k]; });
+    const premBtn = pcBoxes[1].querySelector('button'); if(premBtn) premBtn.textContent = t.pcPremBtn;
+    pcBoxes[2].querySelector('h3').textContent = t.pcYearH;
+    const yearFeats = pcBoxes[2].querySelectorAll('.pc-features li');
+    ['pcYear1','pcYear2','pcYear3','pcYear4'].forEach((k,i)=>{ if(yearFeats[i]) yearFeats[i].textContent = t[k]; });
+    const yearBtn = pcBoxes[2].querySelector('.btn'); if(yearBtn) yearBtn.textContent = t.pcYearBtn;
+    if(pcBoxes[3]) {
+      pcBoxes[3].querySelector('h3').textContent = t.pcSingleH;
+      const sd = pcBoxes[3].querySelector('.pc-desc'); if(sd) sd.textContent = t.pcSingleDesc;
+      const sb = pcBoxes[3].querySelector('.btn'); if(sb) sb.textContent = t.pcSingleBtn;
+    }
+    if(pcBoxes[4]) {
+      pcBoxes[4].querySelector('h3').textContent = t.pcBlockH;
+      const bd = pcBoxes[4].querySelector('.pc-desc'); if(bd) bd.textContent = t.pcBlockDesc;
+      const bb = pcBoxes[4].querySelector('button'); if(bb) bb.textContent = t.pcBlockBtn;
+      const bbadge = pcBoxes[4].querySelector('.feat-badge'); if(bbadge) bbadge.textContent = t.pcBlockBadge;
+    }
+  }
+  const coinPacks = document.querySelectorAll('.coin-pack');
+  [['coin1name','coin1sub'],['coin2name','coin2sub'],['coin3name','coin3sub'],['coin4name','coin4sub']].forEach(([n,s2],i)=>{
+    if(!coinPacks[i]) return;
+    const cn = coinPacks[i].querySelector('.coin-pack-name'); if(cn) cn.textContent = t[n];
+    const cs = coinPacks[i].querySelector('.coin-pack-sub'); if(cs) cs.textContent = t[s2];
+  });
+
+  // REVISION
+  const revStag = document.querySelector('#revision .stag');
+  if(revStag) revStag.textContent = t.revTag;
+  const revH2 = document.querySelector('#revision .sh');
+  if(revH2) revH2.innerHTML = t.revH2;
+  const revSubP = document.querySelector('#revision > p');
+  if(revSubP) revSubP.textContent = t.revSubP;
+  const noteCards = document.querySelectorAll('.note-card');
+  [['note1h','note1p'],['note2h','note2p'],['note3h','note3p'],['note4h','note4p'],['note5h','note5p'],['note6h','note6p']].forEach(([h,p],i)=>{
+    if(!noteCards[i]) return;
+    const nh = noteCards[i].querySelector('h4'); if(nh) nh.innerHTML = t[h];
+    const np = noteCards[i].querySelector('p'); if(np) np.textContent = t[p];
+  });
+
+  // BLOG
+  const blogStag = document.querySelector('#blog-section .stag');
+  if(blogStag) blogStag.textContent = t.blogTag;
+  const blogH2 = document.querySelector('#blog-section .sh');
+  if(blogH2) blogH2.innerHTML = t.blogH2;
+  const blogSubP = document.querySelector('#blog-section > p');
+  if(blogSubP) blogSubP.textContent = t.blogSubP;
+  const blogCards = document.querySelectorAll('.blog-card');
+  [['blog1tag','blog1h','blog1p','blog1meta'],['blog2tag','blog2h','blog2p','blog2meta'],['blog3tag','blog3h','blog3p','blog3meta']].forEach(([tag,h,p,m],i)=>{
+    if(!blogCards[i]) return;
+    const bt = blogCards[i].querySelector('.blog-tag'); if(bt) bt.textContent = t[tag];
+    const bh = blogCards[i].querySelector('h4'); if(bh) bh.textContent = t[h];
+    const bp = blogCards[i].querySelector('p'); if(bp) bp.textContent = t[p];
+    const bm = blogCards[i].querySelector('.blog-meta'); if(bm) bm.textContent = t[m];
+  });
+
+  // REFERRAL
+  const refStag = document.querySelector('.referral-box').closest('section').querySelector('.stag');
+  if(refStag) refStag.textContent = t.refTag;
+  const refH3 = document.querySelector('.referral-box h3');
+  if(refH3) refH3.textContent = t.refH3;
+  const refP = document.querySelector('.referral-box p');
+  if(refP) refP.textContent = t.refP;
+  const refBtns = document.querySelectorAll('.ref-actions .btn');
+  if(refBtns[0]) refBtns[0].textContent = t.refBtn1;
+  if(refBtns[1]) refBtns[1].textContent = t.refBtn2;
+  const refCodeLabel = document.querySelector('.ref-code-label');
+  if(refCodeLabel) refCodeLabel.textContent = t.refCodeLabel;
+  const refCopyHint = document.querySelector('.ref-copy');
+  if(refCopyHint) refCopyHint.textContent = t.refCopyHint;
+
+  // FAQ
+  const faqStag = document.querySelector('#faq .stag');
+  if(faqStag) faqStag.textContent = t.faqTag;
+  const faqH2 = document.querySelector('#faq .sh');
+  if(faqH2) faqH2.innerHTML = t.faqH2;
+  const faqItems = document.querySelectorAll('.faq-item');
+  const faqKeys = [
+    ['faq1q','faq1a'],['faq2q','faq2a'],['faq3q','faq3a'],['faq4q','faq4a'],
+    ['faq5q','faq5a'],['faq6q','faq6a'],['faq7q','faq7a'],['faq8q','faq8a']
+  ];
+  faqItems.forEach((item, i) => {
+    if(!faqKeys[i]) return;
+    const [qk, ak] = faqKeys[i];
+    const qspan = item.querySelector('.faq-q span'); if(qspan) qspan.textContent = t[qk];
+    const aans = item.querySelector('.faq-ans p'); if(aans) aans.textContent = t[ak];
+  });
+  // Add Turkish lesson FAQ if in Turkish and not already present
+  if(!isEn) {
+    const faqGrid = document.querySelector('.faq-grid');
+    let turkishFaq = document.getElementById('turkish-faq-item');
+    if(!turkishFaq && faqGrid) {
+      turkishFaq = document.createElement('div');
+      turkishFaq.className = 'faq-item';
+      turkishFaq.id = 'turkish-faq-item';
+      turkishFaq.innerHTML = `<div class="faq-q" onclick="toggleFaq(this)"><span>🇹🇷 Dersler Türkçe verilebilir mi?</span><div class="faq-ico">+</div></div><div class="faq-ans"><p>Evet! Eylul ana dili Türkçe olan biriyim ve tüm dersleri tamamen Türkçe verebiliyorum. Birleşik Krallık'taki Türkçe konuşan aileler için mükemmeldir — çocuğunuz hem Türkçe hem İngilizce desteklenebilir.</p></div>`;
+      faqGrid.insertBefore(turkishFaq, faqGrid.firstChild);
+    }
+  } else {
+    const turkishFaq = document.getElementById('turkish-faq-item');
+    if(turkishFaq) turkishFaq.remove();
+    // Add English Turkish FAQ
+    const faqGrid = document.querySelector('.faq-grid');
+    let enTurkishFaq = document.getElementById('en-turkish-faq-item');
+    if(!enTurkishFaq && faqGrid) {
+      enTurkishFaq = document.createElement('div');
+      enTurkishFaq.className = 'faq-item';
+      enTurkishFaq.id = 'en-turkish-faq-item';
+      enTurkishFaq.innerHTML = `<div class="faq-q" onclick="toggleFaq(this)"><span>🇹🇷 Are lessons available in Turkish?</span><div class="faq-ico">+</div></div><div class="faq-ans"><p>Yes! Eylul is a native Turkish speaker and can deliver all lessons fully in Turkish. This is perfect for Turkish-speaking families across the UK — your child can be supported in both Turkish and English.</p></div>`;
+      faqGrid.insertBefore(enTurkishFaq, faqGrid.firstChild);
+    }
+  }
+
+  // CONTACT
+  const contactStag = document.querySelector('#enquiry .stag:first-child');
+  if(contactStag) contactStag.textContent = t.contactTag;
+  const contactH2 = document.querySelector('#enquiry .sh');
+  if(contactH2) contactH2.innerHTML = t.contactH2;
+  const contactP = document.querySelector('#enquiry .contact-grid > div:first-child > p');
+  if(contactP) contactP.textContent = t.contactP;
+  const cdLabels = document.querySelectorAll('.cd-label');
+  ['cdLabel1','cdLabel2','cdLabel3'].forEach((k,i)=>{ if(cdLabels[i]) cdLabels[i].textContent = t[k]; });
+  const cdVals = document.querySelectorAll('.cd-val');
+  if(cdVals[1]) cdVals[1].textContent = t.cdVal2;
+  if(cdVals[2]) cdVals[2].textContent = t.cdVal3;
+  const formStag = document.querySelector('#cf-inner .stag');
+  if(formStag) formStag.textContent = t.formTag;
+  const cfNameLabel = document.querySelector('#cf-inner .form-field:nth-child(2) label');
+  const cfEmailLabel = document.querySelector('#cf-inner .form-field:nth-child(3) label');
+  if(cfNameLabel) cfNameLabel.textContent = t.formName;
+  if(cfEmailLabel) cfEmailLabel.textContent = t.formEmail;
+  sp('cf-name', isEn ? 'e.g. Sarah' : 'örn. Ayşe');
+  sp('cf-email', 'your@email.com');
+  const cfWhoLabel = document.querySelector('label[for="cf-who"], #cf-inner .form-field:has(#cf-who) label');
+  const cfWhoSel = document.getElementById('cf-who');
+  if(cfWhoSel) {
+    const opts = cfWhoSel.querySelectorAll('option');
+    ['Seçin…','formOpt1','formOpt2','formOpt3','formOpt4','formOpt5'].forEach((k,i)=>{
+      if(opts[i]) opts[i].textContent = i===0 ? (isEn?'Select…':'Seçin…') : t['formOpt'+(i)];
+    });
+  }
+  const cfTypeSel = document.getElementById('cf-type');
+  if(cfTypeSel) {
+    const opts2 = cfTypeSel.querySelectorAll('option');
+    const prefKeys = [isEn?'Select…':'Seçin…','formPref1','formPref2','formPref3','formPref4','formPref5','formPref6'];
+    opts2.forEach((o,i)=>{ o.textContent = i===0?(isEn?'Select…':'Seçin…'):t[prefKeys[i]]; });
+  }
+  sp('cf-msg', t.formMsgPh);
+  const formSubmitBtn = document.querySelector('.form-submit');
+  if(formSubmitBtn) formSubmitBtn.textContent = t.formBtn;
+  const formSuccessH = document.querySelector('.form-success h3');
+  if(formSuccessH) formSuccessH.textContent = t.formSuccessH;
+  const formSuccessP = document.querySelector('.form-success p');
+  if(formSuccessP) formSuccessP.textContent = t.formSuccessP;
+
+  // FOOTER CTA
+  const footerCTAh = document.querySelector('.fcta-hl');
+  if(footerCTAh) footerCTAh.innerHTML = t.footerCTAh;
+  const footerCTAp = document.querySelector('.fcta-sub');
+  if(footerCTAp) footerCTAp.textContent = t.footerCTAp;
+  const footerBtns = document.querySelectorAll('.fcta-btns .btn');
+  ['footerBtn1','footerBtn2','footerBtn3','footerBtn4'].forEach((k,i)=>{ if(footerBtns[i]) footerBtns[i].textContent = t[k]; });
+  const footerLinksEls = document.querySelectorAll('.footer-links a');
+  t.footerLinks.forEach((txt,i)=>{ if(footerLinksEls[i]) footerLinksEls[i].textContent = txt; });
+  const footerCopy = document.querySelector('.site-footer');
+  if(footerCopy) footerCopy.textContent = t.footerCopy;
+
+  // APP NAV tabs
+  const appBack = document.querySelector('.app-back');
+  if(appBack) appBack.textContent = t.appBack;
+  const appTabs = document.querySelectorAll('.app-tab');
+  const tabKeys = ['appDash','appChallenge','appExam','appBot','appRank','appProgress','appShop'];
+  appTabs.forEach((tab,i)=>{
+    if(!tabKeys[i]) return;
+    const icon = tab.querySelector('.tab-icon');
+    tab.innerHTML = '';
+    if(icon) tab.appendChild(icon);
+    tab.appendChild(document.createTextNode(t[tabKeys[i]]));
+  });
+
+  // APP DASHBOARD
+  const blbTitle = document.querySelector('.blb-t');
+  if(blbTitle) blbTitle.textContent = t.appBookBanner;
+  const blbSub = document.querySelector('.blb-s');
+  if(blbSub) blbSub.textContent = t.appBookBannerS;
+  const blbBtn = document.querySelector('.blb .btn');
+  if(blbBtn) blbBtn.textContent = t.appBookBtn;
+  const levelTitle = document.querySelector('.level-title');
+  if(levelTitle) levelTitle.textContent = t.appLevelTitle;
+  const dsLabels = document.querySelectorAll('.ds-label');
+  const dsSubs = document.querySelectorAll('.ds-sub');
+  ['dsLabel1','dsLabel2','dsLabel3','dsLabel4'].forEach((k,i)=>{ if(dsLabels[i]) dsLabels[i].textContent = t[k]; });
+  ['dsSub1','dsSub2','dsSub3','dsSub4'].forEach((k,i)=>{ if(dsSubs[i]) dsSubs[i].textContent = t[k]; });
+  const daCards = document.querySelectorAll('.da');
+  [['da1t','da1s'],['da2t','da2s'],['da3t','da3s'],['da4t','da4s']].forEach(([tt2,ts],i)=>{
+    if(!daCards[i]) return;
+    const dat = daCards[i].querySelector('.da-title'); if(dat) dat.textContent = t[tt2];
+    const das = daCards[i].querySelector('.da-sub'); if(das) das.textContent = t[ts];
+  });
+  const certBannerT = document.querySelector('.cert-banner-t');
+  if(certBannerT) certBannerT.textContent = t.certBannerT;
+  const certBannerS = document.querySelector('.cert-banner-s');
+  if(certBannerS) certBannerS.textContent = t.certBannerS;
+  const certBannerBtn = document.querySelector('.cert-banner .btn');
+  if(certBannerBtn) certBannerBtn.textContent = t.certBtn;
+  const parentLabelEl = document.querySelector('.app-panel .ds-card').closest('.app-panel').querySelector('div[style*="Parent Dashboard"], div[style*="parent"]');
+  const parentLabelEls = document.querySelectorAll('#panel-dashboard > div[style*="muted"]');
+  parentLabelEls.forEach(el=>{ if(el.textContent.includes('Parent') || el.textContent.includes('Veli')) el.textContent = t.parentLabel; });
+  const parentCardHs = document.querySelectorAll('.parent-card h4');
+  if(parentCardHs[0]) parentCardHs[0].textContent = t.parentWeekH;
+  if(parentCardHs[1]) parentCardHs[1].textContent = t.parentTopicH;
+  const bookGeoBtn = document.querySelector('.btn-electric[onclick*="Geometry"]');
+  if(bookGeoBtn) bookGeoBtn.textContent = t.bookGeoBtn;
+
+  // CHALLENGES
+  const chH = document.querySelector('.ch-header h2');
+  if(chH) chH.textContent = t.challengeH;
+  const chP = document.querySelector('.ch-header p');
+  if(chP) chP.textContent = t.challengeP;
+
+  // BOT
+  const botTitleEl = document.querySelector('.bot-title');
+  if(botTitleEl) botTitleEl.textContent = t.botTitle;
+  const botSubEl = document.querySelector('.bot-sub');
+  if(botSubEl) botSubEl.textContent = t.botSub;
+  sp('bot-input', t.botPh);
+  const botMsgs = document.getElementById('bot-msgs');
+  if(botMsgs && botMsgs.children.length === 1) {
+    const firstBubble = botMsgs.querySelector('.msg-bubble');
+    if(firstBubble) firstBubble.textContent = t.botWelcome;
+  }
+  const botSugs = document.querySelectorAll('.sug');
+  ['botSug1','botSug2','botSug3','botSug4'].forEach((k,i)=>{ if(botSugs[i]) botSugs[i].textContent = t[k]; });
+
+  // LEADERBOARD
+  const lbTitleEl = document.querySelector('#panel-leaderboard h2');
+  if(lbTitleEl) lbTitleEl.textContent = t.lbH;
+  const lbFilters = document.querySelectorAll('.lb-filter');
+  if(lbFilters[0]) lbFilters[0].textContent = t.lbWeekly;
+  if(lbFilters[1]) lbFilters[1].textContent = t.lbAllTime;
+  const lbCtaP = document.querySelector('.lb-cta p');
+  if(lbCtaP) lbCtaP.innerHTML = t.lbCta;
+  const lbCtaBtn2 = document.querySelector('.lb-cta .btn');
+  if(lbCtaBtn2) lbCtaBtn2.textContent = t.lbCtaBtn;
+
+  // PROGRESS
+  const progCards = document.querySelectorAll('.prog-card h4');
+  if(progCards[0]) progCards[0].textContent = t.progTopic;
+  if(progCards[1]) progCards[1].textContent = t.progLevel;
+
+  // EXAM
+  const examTitleEl = document.querySelector('#panel-exam h2, .exam-header h2');
+  const examSubEl = document.querySelector('#panel-exam .exam-header p, #exam-setup > p');
+  const examOptEls = document.querySelectorAll('.exam-opt-card');
+  if(examOptEls[0]) {
+    const eh = examOptEls[0].querySelector('.eo-name'); if(eh) eh.textContent = t.examF;
+    const ed = examOptEls[0].querySelector('.eo-desc'); if(ed) ed.textContent = t.examFd;
+  }
+  if(examOptEls[1]) {
+    const eh2 = examOptEls[1].querySelector('.eo-name'); if(eh2) eh2.textContent = t.examH2;
+    const ed2 = examOptEls[1].querySelector('.eo-desc'); if(ed2) ed2.textContent = t.examHd;
+  }
+  if(examOptEls[2]) {
+    const eh3 = examOptEls[2].querySelector('.eo-name'); if(eh3) eh3.textContent = t.examM;
+    const ed3 = examOptEls[2].querySelector('.eo-desc'); if(ed3) ed3.textContent = t.examMd;
+  }
+  const examStartBtn = document.querySelector('.exam-start-btn, #exam-setup .btn');
+  if(examStartBtn) examStartBtn.textContent = t.examStart;
+  const examCompleteH = document.querySelector('#exam-results h3');
+  if(examCompleteH) examCompleteH.textContent = t.examCompleteH;
+  const examResultBtns = document.querySelectorAll('#exam-results .btn');
+  if(examResultBtns[0]) examResultBtns[0].textContent = t.examTryAgain;
+  if(examResultBtns[1]) examResultBtns[1].textContent = t.examBookBtn;
+  const sbLabels = document.querySelectorAll('.sb-label');
+  ['examCorrect','examWrong','examEarned'].forEach((k,i)=>{ if(sbLabels[i]) sbLabels[i].textContent = t[k]; });
+
+  // SHOP
+  const shopCoinsH = document.querySelector('#panel-shop h2, .shop-section-label');
+  const shopSectionLabels = document.querySelectorAll('#panel-shop > div[style*="muted"], #panel-shop .shop-label');
+  shopSectionLabels.forEach(el => {
+    if(el.textContent.includes('Coin') || el.textContent.includes('Pack')) el.textContent = t.shopCoinsH;
+    if(el.textContent.includes('Spend')) el.textContent = t.shopSpendH;
+  });
+  const spendCards = document.querySelectorAll('.spend-card');
+  if(spendCards[0]) { const sh2 = spendCards[0].querySelector('h4'); if(sh2) sh2.textContent = t.hint5; const sd2 = spendCards[0].querySelector('p'); if(sd2) sd2.textContent = t.hint5d; const sc2 = spendCards[0].querySelector('.spend-cost'); if(sc2) sc2.textContent = t.hint5c; const sb2 = spendCards[0].querySelector('.btn'); if(sb2) sb2.textContent = t.hint5btn; }
+  if(spendCards[1]) { const sh3 = spendCards[1].querySelector('h4'); if(sh3) sh3.textContent = t.lvlSkip; const sd3 = spendCards[1].querySelector('p'); if(sd3) sd3.textContent = t.lvlSkipD; const sc3 = spendCards[1].querySelector('.spend-cost'); if(sc3) sc3.textContent = t.lvlSkipC; const sb3 = spendCards[1].querySelector('.btn'); if(sb3) sb3.textContent = t.lvlSkipBtn; }
+
+  // MODALS
+  const loginHEl = document.querySelector('#login-modal h2');
+  if(loginHEl) loginHEl.textContent = t.loginH;
+  const loginSubEl = document.querySelector('#login-modal .sub');
+  if(loginSubEl) loginSubEl.textContent = t.loginSub;
+  const loginLabels = document.querySelectorAll('#login-modal .mfield label');
+  if(loginLabels[0]) loginLabels[0].textContent = t.loginEmail;
+  if(loginLabels[1]) loginLabels[1].textContent = t.loginPass;
+  const loginBtn2 = document.querySelector('#login-modal .modal-submit');
+  if(loginBtn2) loginBtn2.textContent = t.loginBtn;
+  const loginSwitch = document.querySelector('#login-modal .modal-switch');
+  if(loginSwitch) loginSwitch.innerHTML = t.loginSwitch + ' <a onclick="switchModal(\'login-modal\',\'signup-modal\')">' + t.loginSwitchLink + '</a>';
+  const signupHEl = document.querySelector('#signup-modal h2');
+  if(signupHEl) signupHEl.textContent = t.signupH;
+  const signupSubEl = document.querySelector('#signup-modal .sub');
+  if(signupSubEl) signupSubEl.textContent = t.signupSub;
+  const signupBtn2 = document.querySelector('#signup-modal .modal-submit');
+  if(signupBtn2) signupBtn2.textContent = t.signupBtn;
+  const signupSwitch = document.querySelector('#signup-modal .modal-switch');
+  if(signupSwitch) signupSwitch.innerHTML = t.signupSwitch + ' <a onclick="switchModal(\'signup-modal\',\'login-modal\')">' + t.signupSwitchLink + '</a>';
+}
+
+// Apply on page load (in case saved preference is Turkish)
+document.addEventListener('DOMContentLoaded', () => {
+  if(currentLang === 'tr') applyTranslations();
+  else {
+    // Always add Turkish FAQ in English too
+    applyTranslations();
+  }
 });
 </script>
 </body>
